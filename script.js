@@ -1,5 +1,22 @@
 let currentPage = 0;
 const pages = document.querySelectorAll(".page");
+const grid = {
+  1: { // Category 1
+    A: { start: 0.75, min: 0.60, max: 0.90 },
+    B: { start: 0.65, min: 0.50, max: 0.80 },
+    C: { start: 0.50, min: 0.35, max: 0.65 }
+  },
+  2: { // Category 2
+    A: { start: 0.65, min: 0.50, max: 0.80 },
+    B: { start: 0.50, min: 0.35, max: 0.65 },
+    C: { start: 0.40, min: 0.25, max: 0.55 }
+  },
+  3: { // Category 3
+    A: { start: 0.50, min: 0.35, max: 0.65 },
+    B: { start: 0.40, min: 0.25, max: 0.55 },
+    C: { start: 0.30, min: 0.00, max: 0.45 }
+  }
+};
 
 let data = {
   consequence: "",
@@ -178,32 +195,77 @@ function loadCreditPage() {
   nextPage();
 }
 
+//helper function for calculations
+
+function getCategory(consequence) {
+  if (consequence === "Highest") return 1;
+  if (consequence === "High") return 2;
+  return 3;
+}
+
+function getLevel(seriousness) {
+  if (seriousness === "Lesser") return "A";
+  if (seriousness === "Medium") return "B";
+  return "C";
+}
+
 // ---------------- FINAL RESULT ----------------
 function calculateResult() {
-  let base = 10;
+  const MAX = 30;
 
-  let aggOff = Number(document.getElementById("aggOff").value) || 0;
-  let mitOff = Number(document.getElementById("mitOff").value) || 0;
-  let aggOffender = Number(document.getElementById("aggOffender").value) || 0;
-  let mitOffender = Number(document.getElementById("mitOffender").value) || 0;
+  let category = getCategory(data.consequence);
+  let level = getLevel(data.seriousness);
 
-  let guilty = Number(document.getElementById("guilty").value) || 0;
-  let other = Number(document.getElementById("other").value) || 0;
-  let remand = Number(document.getElementById("remand").value) || 0;
-  let ancillary = Number(document.getElementById("ancillary").value) || 0;
+  let selected = grid[category][level];
 
-  let sentence = base;
+  // Calculate starting point and range
+  let startingPoint = selected.start * MAX;
+  let rangeMin = selected.min * MAX;
+  let rangeMax = selected.max * MAX;
 
-  // Apply percentages
-  sentence += base * (aggOff + aggOffender + other + ancillary) / 100;
-  sentence -= base * (mitOff + mitOffender + guilty + remand) / 100;
+  // Get percentage inputs
+  let aggOff = Number(document.getElementById("aggOff").value);
+  let mitOff = Number(document.getElementById("mitOff").value);
+  let aggOffender = Number(document.getElementById("aggOffender").value);
+  let mitOffender = Number(document.getElementById("mitOffender").value);
 
+  let guilty = Number(document.getElementById("guilty").value);
+  let other = Number(document.getElementById("other").value);
+  let remand = Number(document.getElementById("remand").value);
+  let ancillary = Number(document.getElementById("ancillary").value);
+
+  // Validate inputs
+  let inputs = [aggOff, mitOff, aggOffender, mitOffender, guilty, other, remand, ancillary];
+  if (inputs.some(val => isNaN(val))) {
+    alert("Please enter only numbers for all percentage fields.");
+    return;
+  }
+
+  let sentence = startingPoint;
+
+  // Apply aggravating (+)
+  sentence += startingPoint * (aggOff + aggOffender + other + ancillary) / 100;
+
+  // Apply mitigating (-)
+  sentence -= startingPoint * (mitOff + mitOffender + guilty + remand) / 100;
+
+  // Clamp within range
+  if (sentence < rangeMin) sentence = rangeMin;
+  if (sentence > rangeMax) sentence = rangeMax;
+
+  // Display results
   let container = document.getElementById("resultPage");
 
   container.innerHTML = `
     <h1>Final Sentence</h1>
+
+    <p><b>Starting Point:</b> ${startingPoint.toFixed(2)} years</p>
+    <p><b>Range:</b> ${rangeMin.toFixed(2)} - ${rangeMax.toFixed(2)} years</p>
+
     <h2>${sentence.toFixed(2)} years</h2>
-    <p>All inputs have been considered.</p>
+
+    <p><b>Consequence:</b> ${data.consequence}</p>
+    <p><b>Seriousness:</b> ${data.seriousness}</p>
   `;
 
   nextPage();

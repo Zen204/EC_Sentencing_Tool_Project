@@ -156,21 +156,21 @@ function loadCreditPage() {
     <h2>Instructions:</h2>
     <p>Input only positive numbers. Sentence reduced for credit, increased for debit.</p>
 
-    <p>"Guilty plea credit %"</p>
+    <p>Guilty plea credit %</p>
     <input id="guilty" type="number">
-    <p>"Reasoning:"</p><textarea></textarea>
+    <p>Reasoning</p><textarea></textarea>
 
-    <p>"Sentencing for other offences debit %"</p>
+    <p>Sentencing for other offences debit %</p>
     <input id="other" type="number">
-    <p>"Reasoning:"</p><textarea></textarea>
+    <p>Reasoning</p><textarea></textarea>
 
-    <p>"Time spent on remand for offence credit %"</p>
+    <p>Time spent on remand for offence credit %</p>
     <input id="remand" type="number">
-    <p>"Reasoning:"</p><textarea></textarea>
+    <p>Reasoning</p><textarea></textarea>
 
-    <p>"Ancillary and restraining orders, confiscation, compensation, etc, debit %"</p>
+    <p>Ancillary and restraining orders, confiscation, compensation, etc, debit %</p>
     <input id="ancillary" type="number">
-    <p>"Reasoning:"</p><textarea></textarea>
+    <p>Reasoning:</p><textarea></textarea>
 
     <button onclick="calculateResult()">Next</button>
   `;

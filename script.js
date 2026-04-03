@@ -464,8 +464,6 @@ ${data.seriousnessFactors.map(x => `<li>${x}</li>`).join("")}
 <p>Remand credit: ${remand}%</p>
 <p>Ancillary orders debit: ${ancillary}%</p>
 
-<h2>User Input</h2>
-
 <h3>Consequence Reasoning</h3>
 <p>${data.consequenceReason}</p>
 

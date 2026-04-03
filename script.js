@@ -21,12 +21,32 @@ const grid = {
 let data = {
   consequence: "",
   seriousness: "",
+
   consequenceFactors: [],
   seriousnessFactors: [],
+
   consequenceReason: "",
   seriousnessReason: "",
-  factors: {},
-  credits: {}
+
+  aggOff: 0,
+  mitOff: 0,
+  aggOffender: 0,
+  mitOffender: 0,
+
+  aggOffReason: "",
+  mitOffReason: "",
+  aggOffenderReason: "",
+  mitOffenderReason: "",
+
+  guilty: 0,
+  other: 0,
+  remand: 0,
+  ancillary: 0,
+
+  guiltyReason: "",
+  otherReason: "",
+  remandReason: "",
+  ancillaryReason: ""
 };
 
 function nextPage() {
@@ -81,8 +101,20 @@ container.innerHTML += `
     <textarea id="consequenceReason"></textarea>
   </div>
 
-  <button onclick="nextPage()">Next</button>
+<button onclick="saveConsequence()">Next</button>
 `;
+  nextPage();
+}
+
+function saveConsequence(){
+
+  data.consequenceFactors =
+  [...document.querySelectorAll(".consequenceBox:checked")]
+  .map(x => x.parentElement.innerText);
+
+  data.consequenceReason =
+  document.getElementById("consequenceReason").value;
+
   nextPage();
 }
 
@@ -133,10 +165,22 @@ container.innerHTML += `
     <textarea></textarea>
   </div>
 
-  <button onclick="loadFactorsPage()">Next</button>
+  <button onclick="saveSeriousness()">Next</button>
 `;
 
   nextPage();
+}
+
+function saveSeriousness(){
+
+  data.seriousnessFactors =
+  [...document.querySelectorAll(".seriousnessBox:checked")]
+  .map(x => x.parentElement.innerText);
+
+  data.seriousnessReason =
+  document.querySelector("#seriousnessDetails textarea").value;
+
+  loadFactorsPage();
 }
 
 // ---------------- FACTORS ----------------
@@ -225,10 +269,25 @@ function loadFactorsPage() {
   <p>Reasoning:</p>
   <textarea id="mitOffenderReason"></textarea>
 
-  <button onclick="loadCreditPage()">Next</button>
+  <button onclick="saveFactors()">Next</button>
   `;
 
   nextPage();
+}
+
+function saveFactors(){
+
+  data.aggOff = Number(document.getElementById("aggOff").value);
+  data.mitOff = Number(document.getElementById("mitOff").value);
+  data.aggOffender = Number(document.getElementById("aggOffender").value);
+  data.mitOffender = Number(document.getElementById("mitOffender").value);
+
+  data.aggOffReason = document.getElementById("aggOffReason").value;
+  data.mitOffReason = document.getElementById("mitOffReason").value;
+  data.aggOffenderReason = document.getElementById("aggOffenderReason").value;
+  data.mitOffenderReason = document.getElementById("mitOffenderReason").value;
+
+  loadCreditPage();
 }
 
 // ---------------- CREDIT/DEBIT ----------------
@@ -256,10 +315,32 @@ function loadCreditPage() {
     <input id="ancillary" type="number">
     <p>Reasoning:</p><textarea></textarea>
 
-    <button onclick="calculateResult()">Next</button>
+    <button onclick="saveCredits()">Next</button>
   `;
 
   nextPage();
+}
+
+function saveCredits(){
+
+  data.guilty = Number(document.getElementById("guilty").value);
+  data.other = Number(document.getElementById("other").value);
+  data.remand = Number(document.getElementById("remand").value);
+  data.ancillary = Number(document.getElementById("ancillary").value);
+
+  data.guiltyReason =
+  document.querySelectorAll("#creditPage textarea")[0].value;
+
+  data.otherReason =
+  document.querySelectorAll("#creditPage textarea")[1].value;
+
+  data.remandReason =
+  document.querySelectorAll("#creditPage textarea")[2].value;
+
+  data.ancillaryReason =
+  document.querySelectorAll("#creditPage textarea")[3].value;
+
+  calculateResult();
 }
 
 //helper function for calculations
@@ -300,7 +381,7 @@ data.consequenceReason = document.getElementById("consequenceReason")?.value || 
   let rangeMax = selected.max * MAX;
 
   // Get percentage inputs
-  let aggOff = Number(document.getElementById("aggOff").value);
+  let aggOff = data.aggOff;
   let mitOff = Number(document.getElementById("mitOff").value);
   let aggOffender = Number(document.getElementById("aggOffender").value);
   let mitOffender = Number(document.getElementById("mitOffender").value);
@@ -382,6 +463,38 @@ ${data.seriousnessFactors.map(x => `<li>${x}</li>`).join("")}
 <p>Other offences debit: ${other}%</p>
 <p>Remand credit: ${remand}%</p>
 <p>Ancillary orders debit: ${ancillary}%</p>
+
+<h2>User Reasoning</h2>
+
+<h3>Consequence Reasoning</h3>
+<p>${data.consequenceReason}</p>
+
+<h3>Seriousness Reasoning</h3>
+<p>${data.seriousnessReason}</p>
+
+<h3>Offence Aggravating Reason</h3>
+<p>${data.aggOffReason}</p>
+
+<h3>Offence Mitigating Reason</h3>
+<p>${data.mitOffReason}</p>
+
+<h3>Offender Aggravating Reason</h3>
+<p>${data.aggOffenderReason}</p>
+
+<h3>Offender Mitigating Reason</h3>
+<p>${data.mitOffenderReason}</p>
+
+<h3>Guilty Plea Reason</h3>
+<p>${data.guiltyReason}</p>
+
+<h3>Other Offences Reason</h3>
+<p>${data.otherReason}</p>
+
+<h3>Remand Reason</h3>
+<p>${data.remandReason}</p>
+
+<h3>Ancillary Orders Reason</h3>
+<p>${data.ancillaryReason}</p>
 
 `;
 

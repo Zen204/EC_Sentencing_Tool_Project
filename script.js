@@ -341,7 +341,6 @@ container.innerHTML = `
 <h3>Starting Point Calculation</h3>
 
 <p>Maximum sentence = 30 years</p>
-<p>Grid starting percentage = ${selected.start * 100}%</p>
 
 <p>
 Starting Point = ${selected.start * 100}% × 30  

@@ -1,59 +1,115 @@
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #1e1e2f, #2e3a59);
   color: white;
-  margin: 0;
-  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* App container */
 #app {
-  max-width: 800px;
-  margin: auto;
-  padding: 40px;
+  width: 100%;
+  max-width: 700px;
+  padding: 20px;
 }
 
+/* Card-style pages */
 .page {
   display: none;
-  animation: fade 0.5s ease-in-out;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  animation: fade 0.4s ease-in-out;
 }
 
 .page.active {
   display: block;
 }
 
-h1, h2 {
+/* Headings */
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
   color: #f4d03f;
 }
 
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  color: #f4d03f;
+}
+
+/* Paragraph spacing */
+p {
+  margin: 15px 0;
+  line-height: 1.6;
+}
+
+/* Form elements */
+label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 1rem;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+/* Textarea spacing */
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Buttons */
 button {
-  margin-top: 20px;
-  padding: 10px 20px;
+  margin-top: 25px;
+  padding: 12px 20px;
   border: none;
   background: #f4d03f;
   color: black;
   font-weight: bold;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  width: 100%;
+  transition: 0.2s ease;
 }
 
 button:hover {
   background: #ffd700;
+  transform: translateY(-1px);
 }
 
-label {
-  display: block;
-  margin: 10px 0;
+/* Better spacing between sections */
+.section {
+  margin-bottom: 25px;
 }
 
-textarea, input {
-  width: 80%;
-  margin-top: 10px;
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
-}
-
+/* Fade animation */
 @keyframes fade {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

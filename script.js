@@ -208,7 +208,7 @@ function loadFactorsPage() {
 
   <p>Reasoning:</p>
   <textarea id="aggOffenderReason"></textarea>
-
+<br></br>
   <h3>Offender Mitigating Factors %</h3>
 
   <ul>
@@ -368,7 +368,7 @@ ${data.consequenceFactors.map(x => `<li>${x}</li>`).join("")}
 ${data.seriousnessFactors.map(x => `<li>${x}</li>`).join("")}
 </ul>
 
-<b></b>
+<br></br>
 <h3>Adjustments</h3>
 
 <p>Offence aggravating: ${aggOff}%</p>

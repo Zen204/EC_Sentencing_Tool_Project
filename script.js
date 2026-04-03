@@ -21,6 +21,10 @@ const grid = {
 let data = {
   consequence: "",
   seriousness: "",
+  consequenceFactors: [],
+  seriousnessFactors: [],
+  consequenceReason: "",
+  seriousnessReason: "",
   factors: {},
   credits: {}
 };
@@ -66,7 +70,7 @@ function loadConsequencePage() {
 container.innerHTML += `<div class="section">`;
 
 options[value.value].forEach(opt => {
-  container.innerHTML += `<label><input type="checkbox"> ${opt}</label>`;
+  container.innerHTML += `<label><input type="checkbox" class="consequenceBox"> ${opt}</label>`;
 });
 
 container.innerHTML += `</div>`;
@@ -119,9 +123,9 @@ function loadSeriousnessPage() {
 
   container.innerHTML = `<h2>Check all that apply</h2>`;
 
-  options[value.value].forEach(opt => {
-    container.innerHTML += `<label><input type="checkbox"> ${opt}</label>`;
-  });
+options[value.value].forEach(opt => {
+  container.innerHTML += `<label><input type="checkbox" class="seriousnessBox"> ${opt}</label>`;
+});
 
 container.innerHTML += `
   <div class="section">
@@ -278,6 +282,15 @@ function getLevel(seriousness) {
 
 // ---------------- FINAL RESULT ----------------
 function calculateResult() {
+  data.consequenceFactors =
+[...document.querySelectorAll(".consequenceBox:checked")]
+.map(x => x.parentElement.innerText);
+
+data.seriousnessFactors =
+[...document.querySelectorAll(".seriousnessBox:checked")]
+.map(x => x.parentElement.innerText);
+
+data.consequenceReason = document.getElementById("consequenceReason")?.value || "";
   const MAX = 30;
 
   let category = getCategory(data.consequence);
@@ -323,17 +336,58 @@ function calculateResult() {
   // Display results
   let container = document.getElementById("resultPage");
 
-  container.innerHTML = `
-    <h1>Final Sentence</h1>
+container.innerHTML = `
 
-    <p><b>Starting Point:</b> ${startingPoint.toFixed(2)} years</p>
-    <p><b>Range:</b> ${rangeMin.toFixed(2)} - ${rangeMax.toFixed(2)} years</p>
+<h1>Final Sentence</h1>
 
-    <h2>${sentence.toFixed(2)} years</h2>
+<h2>${sentence.toFixed(2)} years</h2>
 
-    <p><b>Consequence:</b> ${data.consequence}</p>
-    <p><b>Seriousness:</b> ${data.seriousness}</p>
-  `;
+<h3>Starting Point Calculation</h3>
+
+<p>Maximum sentence = 30 years</p>
+<p>Grid starting percentage = ${selected.start * 100}%</p>
+
+<p>
+Starting Point = ${selected.start * 100}% × 30  
+= ${startingPoint.toFixed(2)} years
+</p>
+
+<p>
+Range = ${selected.min * 100}% – ${selected.max * 100}% of 30  
+= ${rangeMin.toFixed(2)} – ${rangeMax.toFixed(2)} years
+</p>
+
+<h3>Your Selections</h3>
+
+<p><b>Consequence Category:</b> ${data.consequence}</p>
+
+<p><b>Factors selected:</b></p>
+<ul>
+${data.consequenceFactors.map(x => `<li>${x}</li>`).join("")}
+</ul>
+
+<p><b>Seriousness Level:</b> ${data.seriousness}</p>
+
+<p><b>Factors selected:</b></p>
+<ul>
+${data.seriousnessFactors.map(x => `<li>${x}</li>`).join("")}
+</ul>
+
+<h3>Adjustments</h3>
+
+<p>Offence aggravating: ${aggOff}%</p>
+<p>Offence mitigating: ${mitOff}%</p>
+<p>Offender aggravating: ${aggOffender}%</p>
+<p>Offender mitigating: ${mitOffender}%</p>
+
+<h3>Credits and Debits</h3>
+
+<p>Guilty plea credit: ${guilty}%</p>
+<p>Other offences debit: ${other}%</p>
+<p>Remand credit: ${remand}%</p>
+<p>Ancillary orders debit: ${ancillary}%</p>
+
+`;
 
   nextPage();
 }
